@@ -32,6 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Persona.h" />
+		<Unit filename="Producto.h" />
 		<Unit filename="Sistema_Tienda.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
