@@ -1,4 +1,6 @@
 #include <iostream>
+#include "Persona.h"
+#include "Producto.h"
 using namespace std;
 
 void MenuPrincipal(){
