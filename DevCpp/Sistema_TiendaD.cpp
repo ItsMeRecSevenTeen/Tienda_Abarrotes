@@ -1,57 +1,99 @@
 #include <iostream>
 #include <string>
+#include <windows.h>
 #include "PersonaD.h"
 #include "ProductoD.h"
-#define RESET   "\033[0m"
-#define BLACK   "\033[30m"
-#define RED     "\033[31m"
-#define GREEN   "\033[32m"
-#define YELLOW  "\033[33m"
-#define BLUE    "\033[34m"
-#define MAGENTA "\033[35m"      
-#define CYAN    "\033[36m"
-#define WHITE   "\033[37m"
+
+#define color SetConsoleTextAttribute
 
 using namespace std;
+
+void MenuPrincipal();
+void menuCliente(){
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    int x;
+    do{
+        color(hConsole, 1);cout << "Que desea realizar?\t";
+        color(hConsole, 16);cout << "Cliente";
+        color(hConsole, 1);cout << "\n1.-Adquirir articulos\n2.-Ver Carrito\n3.-Pagar Carrito\n4.-Regresar al menu principal\n0.-Salir del sistema\n";cin >> x;
+        switch(x){
+        case 0:
+            color(hConsole, 6);
+            cout << "Saliendo del sistema";
+            exit(0);
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            MenuPrincipal();
+            break;
+        default:
+            color(hConsole, 64);
+			cout << "Opcion invalida, Intentelo de nuevo...\n";
+            color(hConsole, 2);
+        }
+    }while(x != 0);
+}
 void menuAdmin();
 void MenuPrincipal(){
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	int x;
 	do{
-		cout << GREEN << "Bienvenido a la tienda de abarrotes ...Que desea hacer? " << BLUE <<"\n1.-Comprar siendo cliente\n "<< MAGENTA << "2.-Administrar tienda	" << RED <<"\n0.-Salir del sistema\n" << RESET;cin >> x;
+ 		color(hConsole, 2);cout << "Bienvenido a la tienda de abarrotes... Que desea hacer? \t";
+ 		color(hConsole, 32);cout << "Usuario";
+ 		color(hConsole, 2);cout << "\n1.-Comprar siendo cliente\n"<< "2.-Administrar tienda	" << "\n0.-Salir del sistema\n";cin >> x;
 		switch(x){
 			case 0:
-				cout << "Saliendo del sistema...\n";
+			    color(hConsole, 6);cout << "Saliendo del sistema...\n";
 				exit(0);
 				break;
-			case 1:
-				cout << "Comprando...\n";
+			case 1:{
+				menuCliente();
 				break;
+			}
 			case 2:
-				cout << "Entrando como administrador...\n";
 				menuAdmin();
 				break;
 			default:
+			    color(hConsole, 64);
 				cout << "Opcion invalida, Intenta de nuevo\n";
+				color(hConsole, 2);
 				break;
 		}
 	}while(x != 0);
 }
 void menuAdmin(){
-	string usuario = "admin";
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+ 	color(hConsole, 13);cout << "Entrando como administrador...\n";
+
+	string usuario = "admin", contrasena = "1234", contrasenaUser = "0";
 	string usuarioUser;
-	int contrasena = 1234, contrasenaUser = 0, x = 0;
+	int x = 0;
 	do{
 		cout << "Ingrese el usuario (x para cancelar):\n";cin >> usuarioUser;
 		if(usuarioUser == "x"){
 			MenuPrincipal();
 		}
-		cout << "Ingrese la contrasena: \n";cin >> contrasenaUser;
-		if(contrasena != contrasenaUser){
-			cout << "Contrasena incorrecta, Intentelo de nuevo...\n";
+		else if(usuarioUser != usuario){
+            color(hConsole, 64);cout << "Usuario incorrecto...Intentelo de nuevo\n";
+            color(hConsole, 13);
+		}
+		else{
+			cout << "Ingrese la contrasena: \n";cin >> contrasenaUser;
+			if(contrasena != contrasenaUser){
+                color(hConsole, 64);cout << "Contrasena incorrecta, Intentelo de nuevo\n";
+                color(hConsole, 13);
+			}
 		}
 	}while(contrasena != contrasenaUser);
 	do{
-		cout << "Bienvenido " << usuario << " ...Que desea hacer?:	\n1.-Anadir item a inventario\n2.-Eliminar item de inventario\n3.-Modificar item de inventario\n4.-Mostrar items del inventario\n0.-Cerrar sesion y volver al menu principal\n";cin >> x;	
+		/*color(hConsole, 5);*/cout << "Bienvenido... Que desea hacer?\t";
+		color(hConsole, 208);cout << "Administrador";
+		color(hConsole, 13);cout << "\n1.-Anadir item a inventario\n2.-Eliminar item de inventario\n3.-Modificar item de inventario\n4.-Mostrar items del inventario\n0.-Cerrar sesion y volver al menu principal\n";cin >> x;
 		switch(x){
 			case 0:
 				MenuPrincipal();
@@ -62,10 +104,14 @@ void menuAdmin(){
 				break;
 			case 3:
 				break;
+            case 4:
+                break;
 			default:
+			    color(hConsole, 64);
 				cout << "Opcion invalida, Intentelo de nuevo...\n";
+				color(hConsole, 2);
 		}
-	}while(x == 0);
+	}while(x != 0);
 }
 
 int main() {
