@@ -5,7 +5,7 @@ class Tienda{
 		Tienda();
 };
 class Producto{
-	private:
+	protected:
 		char nombre[20], fechadecad[20];
 		int cantidad, codigo, unidades;
 		float precio;
@@ -17,6 +17,7 @@ class NoPerecederos: public Producto{
 		char paisdeorigen[20], fechaorigen[20];
 	public:
 		NoPerecederos();
+		void DarAlta(NoPerecederos);
 };
 class Perecederos: public Producto{
 	private:
@@ -24,4 +25,5 @@ class Perecederos: public Producto{
 		char tipoconservacion[20];
 	public:
 		Perecederos();
+		void DarAlta(Perecederos);
 };
