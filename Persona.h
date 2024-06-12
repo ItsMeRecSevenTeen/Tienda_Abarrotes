@@ -1,5 +1,5 @@
 class Persona{
-	private:
+	protected:
 		char nombre[20];
 		int ID;
 	public:
@@ -14,7 +14,7 @@ class Empleado: public Persona{
 };
 class Cliente: public Persona{
 	private:
-		char direccion[20], numtel[20];
+		char direccion[20], numtel[10];
 	public:
 		Cliente();
 };
