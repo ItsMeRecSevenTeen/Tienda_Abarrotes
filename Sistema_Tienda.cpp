@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <fstream>  // Para ofstream
 #include <iostream> // Para cout
+#include <vector>
+#include <sstream>
 #include "Persona.h"
 #include "Producto.h"
 
@@ -10,8 +12,21 @@
 
 using namespace std;
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+//Constructores
+Tienda::Tienda(){
+    color(hConsole, 2);cout << "Ingrese el nombre de la tienda: ";color(hConsole, 6);cout << "\tSin espacios, 20 caracteres\n";color(hConsole, 2);cin>>nombre;
+    color(hConsole, 2);cout << "Ingrese la direccion de la tienda: ";color(hConsole, 6);cout << "\tSin espacios, 20 caracteres\n";color(hConsole, 2);cin>>direccion;
+}
+Persona::Persona(){
+    color(hConsole, 1);cout << "Ingrese su nombre: ";color(hConsole, 6);cout << "\tSin espacios, 20 caracteres\n";color(hConsole, 1);cin>>nombre;
+}
+Cliente::Cliente(){
+    color(hConsole, 1);cout << "Ingrese su direccion: ";color(hConsole, 6);cout << "\tSin espacios, 20 caracteres\n";color(hConsole, 1);cin>>direccion;
+    color(hConsole, 1);cout << "Ingrese su numero de telefono:";color(hConsole, 6);cout << "\tNumerico, 10 digitos\n";color(hConsole, 1);cin>>numtel;
+}
 Producto::Producto(){
-	cout << "Ingrese el nombre del producto: ";color(hConsole, 6);cout << "\tSin espacios, 20 caracteres\n";color(hConsole, 208);cin>>nombre;
+    color(hConsole, 13);cout << "Ingrese el codigo del producto: ";color(hConsole, 6);cout << "\tNumerico\n";color(hConsole, 208);cin>>codigo;
+	color(hConsole, 13);cout << "Ingrese el nombre del producto: ";color(hConsole, 6);cout << "\tSin espacios, 20 caracteres\n";color(hConsole, 208);cin>>nombre;
 	color(hConsole, 13);cout << "Ingrese la fecha de caducidad: ";color(hConsole, 6);cout << "\t'dd/mm/aaaa'\n";color(hConsole, 208);cin>>fechadecad;
 	color(hConsole, 13);cout << "Cuanto contenido neto tiene el producto?: ";color(hConsole, 6);cout << "\t(grs, kgs, mls, lts, gls)\n";color(hConsole, 208);cin>>cantidad;
 	color(hConsole, 13);cout << "Ingrese la cantidad de productos?: ";color(hConsole, 6);cout << "\tUn numero\n";color(hConsole, 208);cin>>unidades;
@@ -19,19 +34,16 @@ Producto::Producto(){
 }
 Perecederos::Perecederos(){
     color(hConsole, 13);cout << "Cual es la temperatura de almacenamiento del producto perecedero?: ";color(hConsole, 6);cout << "\tUn numero, °C\n";cin >> temperaturaalmacencelcius;
-    color(hConsole, 13);cout << "Tipo de almacenamiento que requiere el producto?: ";color(hConsole, 6);cout << "\t(Ambiente,Refrigeracion, Congelacion)\n";cin>> tipoconservacion;
+    color(hConsole, 13);cout << "Tipo de almacenamiento que requiere el producto?: ";color(hConsole, 6);cout << "\t(Ambiente, Refrigeracion, Congelacion)\n";cin>> tipoconservacion;
 }
-void Perecederos::DarAlta(Perecederos miPerecedero){
-    ofstream fich("Articulos.txt");
-  				if (!fich){
-				    cout << "Error al abrir Articulos.txt\n";
-    				exit(EXIT_FAILURE);
-				}
-				fich << miPerecedero.codigo << "," << miPerecedero.nombre << "," << miPerecedero.cantidad << "," << miPerecedero.precio << "," << miPerecedero.fechadecad << "," << miPerecedero.unidades << "\n";
+NoPerecederos::NoPerecederos(){
+    color(hConsole, 13);cout << "De que pais proviene el producto NO perecedero?: ";color(hConsole, 6);cout << "\tUn pais, Sin espacios, 20 caracteres\n";cin >> paisdeorigen;
+    color(hConsole, 13);cout << "En que fecha fue producido el producto?: ";color(hConsole, 6);cout << "\t\n";cin >> fechaorigen;
 }
-
+//Fin de constructores
 void MenuPrincipal();
 void menuCliente(){
+    Cliente miCliente;
     int x;
     do{
         color(hConsole, 1);cout << "Que desea realizar?\t";
@@ -61,6 +73,83 @@ void menuCliente(){
     }while(x != 0);
 }
 void menuAdmin();
+void Perecederos::DarAlta(Perecederos miPerecedero){
+    vector<string> lineas;
+    ostringstream cadena;
+    string linea;
+    ifstream archivoLectura("Articulos.txt");
+    if (archivoLectura.is_open()){
+        while (getline(archivoLectura, linea)){
+            lineas.push_back(linea);
+        }
+        archivoLectura.close();
+    }
+    cadena << miPerecedero.codigo << "," << miPerecedero.nombre << "," << miPerecedero.cantidad << "," << miPerecedero.precio << "," << miPerecedero.fechadecad << "," << miPerecedero.unidades;
+    lineas.push_back(cadena.str());
+    ofstream fich("Articulos.txt");
+        if (!fich){
+  		    color(hConsole, 64);cout << "Error al abrir Articulos.txt\n";
+    		/*exit(EXIT_FAILURE);*/
+        }
+		if (fich.is_open()){
+                fich << "";
+            for (const auto& linea : lineas){
+                fich << linea << endl;
+            }
+            fich.close();
+        }
+}
+
+void modificarArticulo(){
+    vector<string> lineas;
+    string linea;
+
+    // Se lee el fichero y se guardan las líneas en el vector
+    ifstream archivoLectura("Articulos.txt");
+    if (archivoLectura.is_open()){
+        while (getline(archivoLectura, linea)){
+            lineas.push_back(linea);
+        }
+        archivoLectura.close();
+        for (auto x : lineas){//Mostrando el vector con los datos del fichero
+            cout << x;
+        }
+        int lineaParaModificar;
+        color(hConsole, 13);
+        cout << "Ingrese el codigo del producto a modificar\n";
+        cin >> lineaParaModificar;
+        // Modificando una línea específica del vector
+        if (lineaParaModificar - 1 < lineas.size()){
+            lineas[lineaParaModificar - 1] = "";
+        }
+        else{
+            cout << "El indice de la linea para modificar está fuera de rango." << endl;
+        }
+
+        // Escribiendo el contenido modificado de vuelta al fichero
+        ofstream archivoEscritura("Articulos.txt");
+        if (archivoEscritura.is_open()){
+            for (const auto& linea : lineas){
+                archivoEscritura << linea << endl;
+            }
+            archivoEscritura.close();
+        }
+        else{
+            color(hConsole, 64);
+            cout << "Error al abrir el archivo para escritura\n";
+            color(hConsole, 2);
+        }
+
+        cout << "El fichero ha sido modificado correctamente" << endl;
+
+    }
+    else{
+        color(hConsole, 64);
+        cout << "Error al abrir el archivo para lectura\n";
+        color(hConsole, 2);
+    }
+}
+
 void MenuPrincipal(){
 	int x;
 	do{
@@ -137,20 +226,36 @@ void menuAdmin(){
 			case 2:
 				break;
 			case 3:
+			    modificarArticulo();
 				break;
-            case 4:
+            case 4:{
+                ifstream fich("Articulos.txt");
+                if (!fich.is_open()){
+                    color(hConsole, 64);
+                    cout << "No ha dado de alta nuevos articulos, Intente agregar algunos a su almacen\n";
+                    color(hConsole, 2);
+                }else{
+                    string valor;
+                    vector<string> datos;
+                    while (fich >> valor){
+                        datos.push_back(valor);
+                    }
+                    for (auto x : datos){
+                        cout << x << "\n";
+                    }
+                }
                 break;
+            }
 			default:
 			    color(hConsole, 64);
 				cout << "Opcion invalida, Intentelo de nuevo...\n";
 				color(hConsole, 2);
 		}
-	}while(x != 0);
+    }while(x != 0);
 }
 
 int main() {
-	//Ingresar constructor de Tienda
-	//Ingresar constructor de Cliente
+	Tienda miTienda;
 	//El constructor de Empleado se da de alta en el sistema
 	//El constructor de NoPerecederos y Perecederos se dan de alta en el sistema
 	MenuPrincipal();
