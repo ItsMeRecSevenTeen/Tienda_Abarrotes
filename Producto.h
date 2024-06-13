@@ -6,11 +6,12 @@ class Tienda{
 };
 class Producto{
 	protected:
-		char nombre[20], fechadecad[20];
-		int cantidad, codigo, unidades;
+		char nombre[20], fechadecad[20], cantidad[7];
+		int codigo, unidades;
 		float precio;
 	public:
 		Producto();
+		friend class Sistema_tienda;
 };
 class NoPerecederos: public Producto{
 	private:
@@ -26,4 +27,5 @@ class Perecederos: public Producto{
 	public:
 		Perecederos();
 		void DarAlta(Perecederos);
+
 };

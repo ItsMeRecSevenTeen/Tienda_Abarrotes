@@ -100,7 +100,7 @@ void Perecederos::DarAlta(Perecederos miPerecedero){
         }
 }
 
-void modificarArticulo(){
+void eliminarArticulo(){
     vector<string> lineas;
     string linea;
 
@@ -114,16 +114,16 @@ void modificarArticulo(){
         for (auto x : lineas){//Mostrando el vector con los datos del fichero
             cout << x;
         }
-        int lineaParaModificar;
+        int lineaParaEliminar;
         color(hConsole, 13);
-        cout << "Ingrese el codigo del producto a modificar\n";
-        cin >> lineaParaModificar;
-        // Modificando una línea específica del vector
-        if (lineaParaModificar - 1 < lineas.size()){
-            lineas[lineaParaModificar - 1] = "";
+        cout << "Ingrese el codigo del producto a eliminar\n";
+        cin >> lineaParaEliminar;
+        //Eliminando una línea específica del vector
+        if (lineaParaEliminar - 1 < lineas.size()){
+            lineas[lineaParaEliminar - 1] = "";
         }
         else{
-            cout << "El indice de la linea para modificar está fuera de rango." << endl;
+            cout << "El indice de la linea para eliminar está fuera de rango." << endl;
         }
 
         // Escribiendo el contenido modificado de vuelta al fichero
@@ -140,8 +140,69 @@ void modificarArticulo(){
             color(hConsole, 2);
         }
 
-        cout << "El fichero ha sido modificado correctamente" << endl;
+        cout << "El producto ha sido eliminado correctamente" << endl;
 
+    }
+    else{
+        color(hConsole, 64);
+        cout << "Error al abrir el archivo para lectura\n";
+        color(hConsole, 2);
+    }
+}
+
+void modificarArticulo(){
+    vector<string> lineas;
+    string linea;
+    ostringstream cadena;
+    int x;
+
+    // Se lee el fichero y se guardan las líneas en el vector
+    ifstream archivoLectura("Articulos.txt");
+    if (archivoLectura.is_open()){
+        while (getline(archivoLectura, linea)){
+            lineas.push_back(linea);
+        }
+        archivoLectura.close();
+        for (auto x : lineas){//Mostrando el vector con los datos del fichero
+            cout << x;
+        }
+        int lineaParaModificar;
+        color(hConsole, 13);
+        cout << "Ingrese el codigo del producto a modificar\n";cin >> lineaParaModificar;
+        cout << "Que tipo de articulo anadira al inventario?\n1.-Perecedero\n2.-No Perecedero\n";cin >> x;
+        switch(x){
+            case 1:{
+                Perecederos miPerecedero;
+                // Modificando una línea específica del vector
+                if (lineaParaModificar - 1 < lineas.size()){
+                    cadena << miPerecedero.codigo << "," << miPerecedero.nombre << "," << miPerecedero.cantidad << "," << miPerecedero.precio << "," << miPerecedero.fechadecad << "," << miPerecedero.unidades;
+                    lineas[lineaParaModificar - 1] = cadena.str();
+                }else{
+                    cout << "El indice de la linea para modificar está fuera de rango." << endl;
+                }
+                break;
+            }
+            case 2:{
+            }
+            default:
+                color(hConsole, 64);
+                cout << "Opcion invalida, Intentelo de nuevo...\n";
+                color(hConsole, 2);
+        }
+        // Escribiendo el contenido modificado de vuelta al fichero
+        ofstream archivoEscritura("Articulos.txt");
+        if (archivoEscritura.is_open()){
+            for (const auto& linea : lineas){
+                archivoEscritura << linea << endl;
+            }
+            archivoEscritura.close();
+        }
+        else{
+            color(hConsole, 64);
+            cout << "Error al abrir el archivo para escritura\n";
+            color(hConsole, 2);
+        }
+        color(hConsole, 6);cout << "Producto modificado del inventario correctamente\n";
     }
     else{
         color(hConsole, 64);
@@ -208,8 +269,11 @@ void menuAdmin(){
 				MenuPrincipal();
 				break;
 			case 1:
-                cout << "Que tipo de articulo anadira al inventario?\n1.-Perecedero\n2.-No Perecedero\n";cin >> x;
+                cout << "Que tipo de articulo anadira al inventario?\n0.-Cancelar operacion\n1.-Perecedero\n2.-No Perecedero\n";cin >> x;
 			    switch(x){
+			        case 0:{
+			            break;
+			        }
                     case 1:{
                         Perecederos miPerecedero;
                         miPerecedero.DarAlta(miPerecedero);
