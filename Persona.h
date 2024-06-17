@@ -17,4 +17,5 @@ class Cliente: public Persona{
 		char direccion[20], numtel[10];
 	public:
 		Cliente();
+		void adquirirArticulos();
 };

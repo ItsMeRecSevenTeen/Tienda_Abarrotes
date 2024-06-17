@@ -11,7 +11,7 @@ class Producto{
 		float precio;
 	public:
 		Producto();
-		friend class Sistema_tienda;
+		friend void modificarArticulo();
 };
 class NoPerecederos: public Producto{
 	private:
