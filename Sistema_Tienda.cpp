@@ -41,7 +41,6 @@ NoPerecederos::NoPerecederos(){
     color(hConsole, 13);cout << "En que fecha fue producido el producto?: ";color(hConsole, 6);cout << "\t'dd/mm/aaaa'\n";color(hConsole, 208);cin >> fechaorigen;
 }
 //Fin de constructores
-void MenuPrincipal();
 void Cliente::adquirirArticulos(){
     vector<string> inventario, carrito;
     string lineaProducto, codigoUsuario, respuestaUsuario;
@@ -107,92 +106,43 @@ void Cliente::adquirirArticulos(){
         color(hConsole, 2);
     }
 }
-void menuCliente(){
-    Cliente miCliente;
-    int x;
-    do{
-        color(hConsole, 1);cout << "Que desea realizar?\t";
-        color(hConsole, 16);cout << "Cliente";
-        color(hConsole, 1);cout << "\n1.-Adquirir articulos\n2.-Ver Carrito\n3.-Pagar Carrito\n4.-Regresar al menu principal\n0.-Salir del sistema\n";cin >> x;
-        switch(x){
-        case 0:
-            color(hConsole, 6);
-            cout << "Saliendo del sistema";
-            exit(0);
-            break;
-        case 1:{
-            miCliente.adquirirArticulos();
-			break;
-		}
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            MenuPrincipal();
-            break;
-        default:
-            color(hConsole, 64);
-			cout << "Opcion invalida, Intentelo de nuevo...\n";
-            color(hConsole, 2);
-        }
-    }while(x != 0);
-}
-void menuAdmin();
-void Perecederos::DarAlta(Perecederos miPerecedero){
-    vector<string> lineas;
-    ostringstream cadena;
-    string linea;
-    ifstream archivoLectura("Articulos.txt");
-    if (archivoLectura.is_open()){
-        while (getline(archivoLectura, linea)){
-            lineas.push_back(linea);
-        }
+void Cliente::verCarrito(){
+    ifstream archivoLectura("Carrito.txt");
+    archivoLectura.seekg(0, ios::end);
+    if (!archivoLectura.is_open() || archivoLectura.tellg() == 0){
+        color(hConsole, 64);
+        cout << "No has adquirido articulos, Intenta comprar algo para agregarlo a tu carrito de compras\n";
         archivoLectura.close();
     }
-    cadena << miPerecedero.codigo << "," << miPerecedero.nombre << "," << miPerecedero.cantidad << "," << miPerecedero.precio << "," << miPerecedero.fechadecad << "," << miPerecedero.unidades;
-    lineas.push_back(cadena.str());
-    ofstream fich("Articulos.txt");
-        if (!fich){
-  		    color(hConsole, 64);cout << "Error al abrir Articulos.txt\n";
-    		/*exit(EXIT_FAILURE);*/
-        }
-		if (fich.is_open()){
-                fich << "";
-            for (const auto& linea : lineas){
-                fich << linea << endl;
-            }
-            fich.close();
-        }
 }
-void NoPerecederos::DarAlta(NoPerecederos miNoPerecedero){
-    vector<string> lineas;
-    ostringstream cadena;
-    string linea;
-    ifstream archivoLectura("Articulos.txt");
-    if (archivoLectura.is_open()){
-        while (getline(archivoLectura, linea)){
-            lineas.push_back(linea);
-        }
-        archivoLectura.close();
-    }
-    cadena << miNoPerecedero.codigo << "," <<miNoPerecedero.nombre << "," << miNoPerecedero.cantidad << "," << miNoPerecedero.precio << "," << miNoPerecedero.fechadecad << "," << miNoPerecedero.unidades;
-    lineas.push_back(cadena.str());
-    ofstream fich("Articulos.txt");
-        if (!fich){
-  		    color(hConsole, 64);cout << "Error al abrir Articulos.txt\n";
-    		/*exit(EXIT_FAILURE);*/
-        }
-		if (fich.is_open()){
-                fich << "";
-            for (const auto& linea : lineas){
-                fich << linea << endl;
-            }
-            fich.close();
-        }
+void Cliente::pagarCarrito(){
+
 }
 
-void eliminarArticulo(){
+void Tienda::anadirItemInventario(int x){
+    cout << "Que tipo de articulo anadira al inventario?\n1.-Perecedero\n2.-No Perecedero\n";cin >> x;
+			    switch(x){
+                    case 1:{
+                        Perecederos miPerecedero;
+                        miPerecedero.DarAlta(miPerecedero);
+                        color(hConsole, 96);cout << "Producto anadido al inventario\n";
+                        break;
+                    }
+                    case 2:{
+                        NoPerecederos miNoPerecedero;
+                        miNoPerecedero.DarAlta(miNoPerecedero);
+                        color(hConsole, 96);cout << "Producto anadido al inventario\n";
+                        break;
+                    }
+                    default:{
+                        color(hConsole, 64);
+                    cout << "Opcion invalida, Intentelo de nuevo...\n";
+                    color(hConsole, 2);
+                    break;
+                    }
+			    }
+}
+void Tienda::eliminarItemInventario(){
     vector<string> lineas;
     string linea;
 
@@ -242,7 +192,7 @@ void eliminarArticulo(){
     }
 }
 
-void modificarArticulo(){
+void Tienda::modificarItemInventario(){
     vector<string> lineas;
     string linea;
     ostringstream cadena;
@@ -314,7 +264,114 @@ void modificarArticulo(){
     }
 }
 
-void MenuPrincipal(){
+void Tienda::mostrarItemInventario(){
+    ifstream fich("Articulos.txt");
+    if (!fich.is_open()){
+        color(hConsole, 64);
+        cout << "No ha dado de alta nuevos articulos, Intente agregar algunos a su inventario\n";
+        color(hConsole, 2);
+    }else{
+        string valor;
+        vector<string> datos;
+        while (fich >> valor){
+            datos.push_back(valor);
+        }
+        cout << "\n-_-_-_-_-_-_Articulos en inventario-_-_-_-_-_-_\n";
+        for (auto x : datos){
+            cout << x << endl;
+        }
+        cout << endl;
+    }
+}
+
+void Perecederos::DarAlta(Perecederos miPerecedero){
+    vector<string> lineas;
+    ostringstream cadena;
+    string linea;
+    ifstream archivoLectura("Articulos.txt");
+    if (archivoLectura.is_open()){
+        while (getline(archivoLectura, linea)){
+            lineas.push_back(linea);
+        }
+        archivoLectura.close();
+    }
+    cadena << miPerecedero.codigo << "," << miPerecedero.nombre << "," << miPerecedero.cantidad << "," << miPerecedero.precio << "," << miPerecedero.fechadecad << "," << miPerecedero.unidades;
+    lineas.push_back(cadena.str());
+    ofstream fich("Articulos.txt");
+        if (!fich){
+  		    color(hConsole, 64);cout << "Error al abrir Articulos.txt\n";
+    		/*exit(EXIT_FAILURE);*/
+        }
+		if (fich.is_open()){
+                fich << "";
+            for (const auto& linea : lineas){
+                fich << linea << endl;
+            }
+            fich.close();
+        }
+}
+void NoPerecederos::DarAlta(NoPerecederos miNoPerecedero){
+    vector<string> lineas;
+    ostringstream cadena;
+    string linea;
+    ifstream archivoLectura("Articulos.txt");
+    if (archivoLectura.is_open()){
+        while (getline(archivoLectura, linea)){
+            lineas.push_back(linea);
+        }
+        archivoLectura.close();
+    }
+    cadena << miNoPerecedero.codigo << "," <<miNoPerecedero.nombre << "," << miNoPerecedero.cantidad << "," << miNoPerecedero.precio << "," << miNoPerecedero.fechadecad << "," << miNoPerecedero.unidades;
+    lineas.push_back(cadena.str());
+    ofstream fich("Articulos.txt");
+        if (!fich){
+  		    color(hConsole, 64);cout << "Error al abrir Articulos.txt\n";
+    		/*exit(EXIT_FAILURE);*/
+        }
+		if (fich.is_open()){
+                fich << "";
+            for (const auto& linea : lineas){
+                fich << linea << endl;
+            }
+            fich.close();
+        }
+}
+
+void menuAdmin(Tienda miTienda);
+void MenuPrincipal(Tienda miTienda);
+void menuCliente(Tienda miTienda){
+    Cliente miCliente;
+    int x;
+    do{
+        color(hConsole, 1);cout << "Que desea realizar?\t";
+        color(hConsole, 16);cout << "Cliente";
+        color(hConsole, 1);cout << "\n1.-Adquirir articulos\n2.-Ver Carrito\n3.-Pagar Carrito\n4.-Regresar al menu principal\n0.-Salir del sistema\n";cin >> x;
+        switch(x){
+        case 0:
+            color(hConsole, 6);
+            cout << "Saliendo del sistema";
+            exit(0);
+            break;
+        case 1:
+            miCliente.adquirirArticulos();
+			break;
+        case 2:
+            miCliente.verCarrito();
+            break;
+        case 3:
+            miCliente.pagarCarrito();
+            break;
+        case 4:
+            MenuPrincipal(miTienda);
+            break;
+        default:
+            color(hConsole, 64);
+			cout << "Opcion invalida, Intentelo de nuevo...\n";
+            color(hConsole, 2);
+        }
+    }while(x != 0);
+}
+void MenuPrincipal(Tienda miTienda){
 	int x;
 	do{
  		color(hConsole, 2);cout << "Bienvenido a la tienda de abarrotes... Que desea hacer? \t";
@@ -322,15 +379,15 @@ void MenuPrincipal(){
  		color(hConsole, 2);cout << "\n1.-Comprar siendo cliente\n"<< "2.-Administrar tienda	" << "\n0.-Salir del sistema\n";cin >> x;
 		switch(x){
 			case 0:
-			    color(hConsole, 6);cout << "Saliendo del sistema...\n";
+			    color(hConsole, 6);cout << "Saliendo del sistema...\n";color(hConsole, 15);
 				exit(0);
 				break;
 			case 1:{
-				menuCliente();
+				menuCliente(miTienda);
 				break;
 			}
 			case 2:
-				menuAdmin();
+				menuAdmin(miTienda);
 				break;
 			default:
 			    color(hConsole, 64);
@@ -340,14 +397,14 @@ void MenuPrincipal(){
 		}
 	}while(x != 0);
 }
-void menuAdmin(){
+void menuAdmin(Tienda miTienda){
 	string usuario = "admin", contrasena = "1234", contrasenaUser = "0";
 	string usuarioUser;
 	int x = 0;
 	do{
 		color(hConsole, 13);cout << "Ingrese el usuario (x para cancelar):\n";cin >> usuarioUser;
 		if(usuarioUser == "x"){
-			MenuPrincipal();
+			MenuPrincipal(miTienda);
 		}
 		else if(usuarioUser != usuario){
             color(hConsole, 64);cout << "Usuario incorrecto...Intentelo de nuevo\n";
@@ -368,55 +425,19 @@ void menuAdmin(){
 		color(hConsole, 13);cout << "\n1.-Anadir item a inventario\n2.-Eliminar item de inventario\n3.-Modificar item de inventario\n4.-Mostrar items del inventario\n0.-Cerrar sesion y volver al menu principal\n";cin >> x;
 		switch(x){
 			case 0:
-				MenuPrincipal();
+				MenuPrincipal(miTienda);
 				break;
 			case 1:
-                cout << "Que tipo de articulo anadira al inventario?\n1.-Perecedero\n2.-No Perecedero\n";cin >> x;
-			    switch(x){
-                    case 1:{
-                        Perecederos miPerecedero;
-                        miPerecedero.DarAlta(miPerecedero);
-                        color(hConsole, 96);cout << "Producto anadido al inventario\n";
-                        break;
-                    }
-                    case 2:{
-                        NoPerecederos miNoPerecedero;
-                        miNoPerecedero.DarAlta(miNoPerecedero);
-                        color(hConsole, 96);cout << "Producto anadido al inventario\n";
-                        break;
-                    }
-                    default:{
-                        color(hConsole, 64);
-                    cout << "Opcion invalida, Intentelo de nuevo...\n";
-                    color(hConsole, 2);
-                    break;
-                    }
-			    }
+                miTienda.anadirItemInventario(x);
 			    break;
 			case 2:
-			    eliminarArticulo();
+			    miTienda.eliminarItemInventario();
 				break;
 			case 3:
-			    modificarArticulo();
+			    miTienda.modificarItemInventario();
 				break;
             case 4:{
-                ifstream fich("Articulos.txt");
-                if (!fich.is_open()){
-                    color(hConsole, 64);
-                    cout << "No ha dado de alta nuevos articulos, Intente agregar algunos a su inventario\n";
-                    color(hConsole, 2);
-                }else{
-                    string valor;
-                    vector<string> datos;
-                    while (fich >> valor){
-                        datos.push_back(valor);
-                    }
-                    cout << "\n-_-_-_-_-_-_Articulos en inventario-_-_-_-_-_-_\n";
-                    for (auto x : datos){
-                        cout << x << endl;
-                    }
-                    cout << endl;
-                }
+                miTienda.mostrarItemInventario();
                 break;
             }
             case 5:{
@@ -432,8 +453,8 @@ void menuAdmin(){
 }
 
 int main() {
-	Tienda miTienda;
+    Tienda miTienda;
 	//El constructor de Empleado se da de alta en el sistema
-	MenuPrincipal();
+	MenuPrincipal(miTienda);
 	return 0;
 }
