@@ -3,6 +3,12 @@ class Tienda{
 		char nombre[20], direccion[20];
 	public:
 		Tienda();
+		void anadirItemInventario(int);
+		void eliminarItemInventario();
+		void modificarItemInventario();
+		void mostrarItemInventario();
+		void mostrarInformacionTienda();
+		void imprimirTicket();
 };
 class Producto{
 	protected:
@@ -11,7 +17,7 @@ class Producto{
 		float precio;
 	public:
 		Producto();
-		friend void modificarArticulo();
+		friend class Tienda;
 };
 class NoPerecederos: public Producto{
 	private:
@@ -27,5 +33,4 @@ class Perecederos: public Producto{
 	public:
 		Perecederos();
 		void DarAlta(Perecederos);
-
 };
