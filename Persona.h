@@ -18,4 +18,6 @@ class Cliente: public Persona{
 	public:
 		Cliente();
 		void adquirirArticulos();
+		void verCarrito();
+		void pagarCarrito();
 };
