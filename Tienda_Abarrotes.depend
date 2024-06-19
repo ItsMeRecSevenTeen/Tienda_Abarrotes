@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1718634270 source:c:\users\rec17\onedrive\escritorio\tienda_abarrotes\sistema_tienda.cpp
+1718773208 source:c:\users\rec17\onedrive\escritorio\tienda_abarrotes\sistema_tienda.cpp
 	<iostream>
 	<string>
 	<windows.h>
@@ -10,7 +10,7 @@
 	"Persona.h"
 	"Producto.h"
 
-1718554000 c:\users\rec17\onedrive\escritorio\tienda_abarrotes\persona.h
+1718756484 c:\users\rec17\onedrive\escritorio\tienda_abarrotes\persona.h
 
-1718316857 c:\users\rec17\onedrive\escritorio\tienda_abarrotes\producto.h
+1718764035 c:\users\rec17\onedrive\escritorio\tienda_abarrotes\producto.h
 
