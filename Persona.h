@@ -1,3 +1,4 @@
+class Tienda;
 class Persona{
 	protected:
 		char nombre[20];
@@ -19,5 +20,5 @@ class Cliente: public Persona{
 		Cliente();
 		void adquirirArticulos();
 		void verCarrito();
-		void pagarCarrito();
+		void pagarCarrito(Cliente, Tienda);
 };

@@ -1,14 +1,15 @@
 class Tienda{
 	protected:
-		char nombre[20], direccion[20];
+		char nombreTienda[20], direccion[20], nombreDueno[20];
 	public:
 		Tienda();
-		void anadirItemInventario(int);
+		void anadirItemInventario();
 		void eliminarItemInventario();
 		void modificarItemInventario();
 		void mostrarItemInventario();
 		void mostrarInformacionTienda();
-		void imprimirTicket();
+        void contratarEmpleado();
+		friend void Cliente::pagarCarrito(Cliente, Tienda);
 };
 class Producto{
 	protected:
